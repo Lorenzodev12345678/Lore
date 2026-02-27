@@ -33,16 +33,17 @@
         .painel-box { display: none; background: #1a1a1a; color: white; padding: 20px; border-radius: 15px; border: 3px dashed gold; max-width: 500px; margin: 20px auto; }
         input, textarea { width: 90%; margin: 10px 0; padding: 10px; border-radius: 5px; border: none; display: block; margin-left: auto; margin-right: auto; }
         
-        /* Botão Google Material */
-        .gsi-material-button { background-color: white; border: 1px solid #747775; border-radius: 4px; color: #1f1f1f; cursor: pointer; font-family: 'Roboto', arial, sans-serif; font-size: 14px; font-weight: 500; height: 40px; padding: 0 12px; margin: 10px auto; display: flex; align-items: center; justify-content: center; }
-        .gsi-material-button-icon { height: 20px; margin-right: 12px; width: 20px; }
+        /* Botão Google Material Oficial */
+        .gsi-material-button { background-color: white; border: 1px solid #747775; border-radius: 4px; color: #1f1f1f; cursor: pointer; font-family: 'Roboto', arial, sans-serif; font-size: 14px; font-weight: 500; height: 40px; padding: 0 12px; margin: 20px auto; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 250px; }
+        .gsi-material-button-icon { height: 20px; margin-right: 12px; min-width: 20px; width: 20px; }
 
         .btn-postar { background: gold; color: black; font-weight: bold; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; }
         .btn-master { padding: 5px 10px; margin: 5px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; }
         .btn-edit { background: #2196F3; color: white; }
         .btn-del { background: #f44336; color: white; }
         
-        #user-info { margin-bottom: 10px; color: gold; font-weight: bold; display: none; }
+        #user-info { margin-bottom: 15px; color: gold; font-weight: bold; display: none; }
+        .user-photo { width: 50px; height: 50px; border-radius: 50%; border: 2px solid gold; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -64,9 +65,13 @@
 
     <div id="aba-painel" class="aba">
         <div id="login-painel">
-            <h3>Área Restrita</h3>
-            <div id="user-info">Olá, <span id="user-name"></span>!</div>
+            <h3>Área Restrita do Lorenzo</h3>
             
+            <div id="user-info">
+                <img id="user-photo" class="user-photo" src="" alt="">
+                <div>Olá, <span id="user-name"></span>!</div>
+            </div>
+
             <button class="gsi-material-button" id="btnGoogle">
                 <div class="gsi-material-button-icon">
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="display: block;">
@@ -79,13 +84,13 @@
                 <span class="gsi-material-button-contents">Sign in with Google</span>
             </button>
 
-            <p>Ou use a senha secreta:</p>
-            <input type="password" id="senhaAcesso" placeholder="Digite a senha secreta...">
-            <button class="btn-menu" style="background:#cc0000; margin-top: 10px;" onclick="validarSenha()">ENTRAR COM SENHA</button>
+            <p>Ou digite a senha master:</p>
+            <input type="password" id="senhaAcesso" placeholder="Senha secreta...">
+            <button class="btn-menu" style="background:#cc0000; margin-top: 10px;" onclick="validarSenha()">ACESSAR</button>
         </div>
 
         <div id="painel-real" class="painel-box">
-            <h2 style="color:gold;">👑 CRIAR NOTÍCIA AO VIVO</h2>
+            <h2 style="color:gold;">👑 CRIAR NOTÍCIA</h2>
             <input type="text" id="novoTitulo" placeholder="Título da Notícia">
             <textarea id="novaDescricao" placeholder="Descrição da Notícia"></textarea>
             <input type="file" id="inputImagem" accept="image/*">
@@ -100,11 +105,18 @@
     </div>
 
     <script>
-        setTimeout(() => { document.getElementById('tela-welcome').style.display = 'none'; }, 3000);
+        // Lógica para esconder a tela de boas-vindas
+        setTimeout(() => {
+            document.getElementById('tela-welcome').style.display = 'none';
+        }, 3000);
+
+        // Troca de abas
         function abrirAba(nome) {
             document.querySelectorAll('.aba').forEach(a => a.classList.remove('aba-ativa'));
             document.getElementById('aba-' + nome).classList.add('aba-ativa');
         }
+
+        // Pesquisa de notícias
         function verificarBusca() {
             let termo = document.getElementById('inputBusca').value.toLowerCase();
             document.querySelectorAll('.card').forEach(card => {
@@ -112,6 +124,9 @@
             });
         }
     </script>
+
+    <script type="module" src="auth.js"></script>
     <script type="module" src="main.js"></script>
+
 </body>
 </html>
