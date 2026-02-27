@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBpX9m0gxH9Qg3RTDHNGwpbTawcRgh2fkY",
@@ -19,29 +19,32 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const noticiasRef = ref(db, 'noticias');
 
-// --- SISTEMA DE LOGIN COM GOOGLE ---
+// --- LÓGICA DE LOGIN COM GOOGLE (REDIRECT) ---
 document.addEventListener('DOMContentLoaded', () => {
     const btnGoogle = document.getElementById('btnGoogle');
     if (btnGoogle) {
         btnGoogle.onclick = () => {
-            signInWithPopup(auth, provider)
-                .then((result) => {
-                    alert("Carregando API.......simmmm a melhor ia");
-                })
-                .catch((error) => {
-                    alert("Erro no login: " + error.message);
-                });
+            signInWithRedirect(auth, provider);
         };
     }
 });
 
-// Monitorar se o usuário está logado
+// Verifica se o usuário voltou do login do Google
+getRedirectResult(auth).then((result) => {
+    if (result) {
+        alert("Carregando API.......simmmm a melhor ia");
+    }
+}).catch((error) => {
+    console.error("Erro no login:", error.message);
+});
+
+// Monitorar o estado do usuário
 onAuthStateChanged(auth, (user) => {
     if (user) {
         document.getElementById('user-info').style.display = "block";
         document.getElementById('user-name').innerText = user.displayName;
         
-        // Se for o seu e-mail, libera o painel automático
+        // Se o email for o seu, abre o painel de criação direto
         if(user.email === "lorenzodevcritor@gmail.com") {
              document.getElementById('login-painel').style.display = "none";
              document.getElementById('painel-real').style.display = "block";
@@ -49,7 +52,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// --- LOGIN POR SENHA ---
+// --- LOGIN POR SENHA (FALLBACK) ---
 window.validarSenha = function() {
     const senha = document.getElementById('senhaAcesso').value;
     if (senha === ".?????×[&&&&&;") {
@@ -63,7 +66,7 @@ window.validarSenha = function() {
     }
 };
 
-// --- LÓGICA DE IMAGEM (PREVIEW) ---
+// --- PREVIEW DA IMAGEM ---
 let imagemBase64 = "";
 const inputImg = document.getElementById('inputImagem');
 if(inputImg) {
@@ -85,7 +88,7 @@ window.salvarNoticia = function() {
     const img = document.getElementById('preview').src;
 
     if (!titulo || !imagemBase64) {
-        alert("Preencha o título e escolha a foto, rlk!");
+        alert("Preencha o título e a foto, man!");
         return;
     }
 
@@ -95,12 +98,12 @@ window.salvarNoticia = function() {
         img: img,
         data: new Date().toLocaleString()
     }).then(() => {
-        alert("NOTÍCIA POSTADA AO VIVO!");
+        alert("POSTADO NO PORTAL LORE!");
         location.reload();
     });
 };
 
-// --- MOSTRAR NOTÍCIAS E GERENCIAR (VIEW/UPDATE/DELETE) ---
+// --- MOSTRAR E GERENCIAR NOTÍCIAS (VIEW/UPDATE/DELETE) ---
 onValue(noticiasRef, (snapshot) => {
     const feed = document.getElementById('feed-noticias');
     const listaMaster = document.getElementById('lista-gerenciamento');
@@ -113,8 +116,8 @@ onValue(noticiasRef, (snapshot) => {
         const n = item.val();
         const id = item.key;
 
-        // Adiciona no Feed do Site
-        const cardHTML = `
+        // Mostrar no Feed Público
+        feed.insertAdjacentHTML('afterbegin', `
             <div class="card">
                 <div class="urgente-header">🚨 NOTÍCIA AO VIVO</div>
                 <img src="${n.img}" class="imagem-noticia">
@@ -123,33 +126,30 @@ onValue(noticiasRef, (snapshot) => {
                     <p>${n.desc}</p>
                 </div>
                 <button class="botao-noticia" onclick="alert('Carregando API.......simmmm a melhor ia')">LER COMPLETA</button>
-            </div>`;
-        feed.insertAdjacentHTML('afterbegin', cardHTML);
+            </div>`);
 
-        // Adiciona no Painel Master (Gerenciamento)
+        // Mostrar no Painel Master
         if(listaMaster) {
-            const itemMaster = `
+            listaMaster.insertAdjacentHTML('beforeend', `
                 <div style="border-bottom: 1px solid #444; padding: 10px; text-align: left;">
-                    <span style="color:gold; font-weight:bold;">${n.titulo}</span><br>
+                    <span style="color:gold;">${n.titulo}</span><br>
                     <button class="btn-master btn-edit" onclick="renomearNoticia('${id}')">Renomear</button>
                     <button class="btn-master btn-del" onclick="excluirNoticia('${id}')">Excluir</button>
-                </div>`;
-            listaMaster.insertAdjacentHTML('beforeend', itemMaster);
+                </div>`);
         }
     });
 });
 
-// FUNÇÃO PARA EXCLUIR
+// FUNÇÕES DE GERENCIAMENTO
 window.excluirNoticia = function(id) {
-    if(confirm("Quer apagar essa notícia rlk?")) {
+    if(confirm("Deseja apagar essa notícia rlk?")) {
         remove(ref(db, 'noticias/' + id));
     }
 };
 
-// FUNÇÃO PARA RENOMEAR
 window.renomearNoticia = function(id) {
-    const novoTitulo = prompt("Digite o novo título da notícia:");
-    if(novoTitulo) {
-        update(ref(db, 'noticias/' + id), { titulo: novoTitulo });
+    const novo = prompt("Digite o novo título:");
+    if(novo) {
+        update(ref(db, 'noticias/' + id), { titulo: novo });
     }
 };
