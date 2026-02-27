@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Lorenzo - VIP</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #e5e5e5; margin: 0; padding: 15px; text-align: center; }
+        
+        /* Menu de Navegação */
+        .menu { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .btn-menu { background: #000; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .btn-menu:active { background: #cc0000; }
+
+        .busca-container { width: 100%; margin-bottom: 20px; }
+        .barra-busca { width: 100%; padding: 12px 20px; border-radius: 30px; border: 2px solid #cc0000; box-sizing: border-box; font-size: 16px; outline: none; }
+        
+        /* Abas */
+        .aba { display: none; }
+        .aba-ativa { display: block; }
+
+        /* Cards das Notícias */
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border-top: 10px solid #cc0000; max-width: 500px; margin: 20px auto; text-align: left; }
+        .urgente-header { background: #000; color: #fff; padding: 10px; text-align: center; font-weight: bold; }
+        .imagem-noticia { width: 100%; display: block; border-bottom: 3px solid #cc0000; max-height: 400px; object-fit: cover; }
+        .conteudo-noticia { padding: 20px; }
+        .botao-noticia { display: block; width: 100%; background: #cc0000; color: white; padding: 15px; border: none; font-weight: bold; font-size: 16px; }
+
+        /* Painel Secreto */
+        #painel-real { display: none; background: #1a1a1a; color: white; padding: 20px; border-radius: 15px; border: 3px dashed gold; max-width: 500px; margin: 20px auto; }
+        #painel-real input, #painel-real textarea { width: 90%; margin: 10px 0; padding: 10px; border-radius: 5px; border: none; display: block; margin-left: auto; margin-right: auto; }
+        
+        .btn-enviar-senha { background: #cc0000; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        .btn-postar { background: gold; color: black; font-weight: bold; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        
+        #preview { width: 150px; margin: 10px auto; display: none; border: 2px solid gold; }
+    </style>
+</head>
+<body>
+
+    <div class="menu">
+        <button class="btn-menu" onclick="abrirAba('noticias')">📰 VER NOTÍCIAS</button>
+        <button class="btn-menu" onclick="abrirAba('painel')">🔐 ACESSAR PAINEL</button>
+    </div>
+
+    <div id="aba-noticias" class="aba aba-ativa">
+        <div class="busca-container">
+            <input type="text" id="inputBusca" class="barra-busca" placeholder="🔍 Pesquisar notícias..." onkeyup="verificarBusca()">
+        </div>
+        <div id="feed-noticias">
+             <div class="card">
+                <div class="urgente-header">🚨 PLANTÃO URGENTE</div>
+                <img src="ADILSINHO.jpg" class="imagem-noticia">
+                <div class="conteudo-noticia">
+                    <h2>Adilsinho é preso no Rio</h2>
+                    <p>Contraventor responde por homicídios e tinha 4 mandados de prisão em aberto.</p>
+                </div>
+                <button class="botao-noticia" onclick="alert('Carregando API.......simmmm a melhor ia')">LER COMPLETA</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="aba-painel" class="aba">
+        <div id="login-painel">
+            <h3>Área Restrita</h3>
+            <p>Digite a senha secreta para configurar o portal:</p>
+            <input type="password" id="senhaAcesso" class="barra-busca" style="width: 80%;" placeholder="Digite a senha...">
+            <br>
+            <button class="btn-enviar-senha" onclick="validarSenha()">ENVIAR SENHA</button>
+        </div>
+
+        <div id="painel-real">
+            <h2 style="color:gold;">👑 PAINEL REAL DO LORENZO</h2>
+            <input type="text" id="novoTitulo" placeholder="Título da Notícia">
+            <textarea id="novaDescricao" placeholder="Descrição da Notícia"></textarea>
+            
+            <p style="font-size: 14px; color: gold;">📸 Selecionar foto da galeria:</p>
+            <input type="file" id="inputImagem" accept="image/*" style="color: white;">
+            <img id="preview" src="">
+            <br>
+            <button class="btn-postar" onclick="salvarNoticia()">POSTAR NO SITE</button>
+        </div>
+    </div>
+
+    <script>
+        const senhaCorreta = ".?????×[&&&&&;";
+        let imagemBase64 = "";
+
+        function abrirAba(nome) {
+            document.querySelectorAll('.aba').forEach(a => a.classList.remove('aba-ativa'));
+            document.getElementById('aba-' + nome).classList.add('aba-ativa');
+        }
+
+        // FUNÇÃO DO BOTÃO DE ENVIAR SENHA
+        function validarSenha() {
+            let digitado = document.getElementById('senhaAcesso').value;
+            if (digitado === senhaCorreta) {
+                document.getElementById('login-painel').style.display = "none";
+                document.getElementById('painel-real').style.display = "block";
+                alert("SENHA CORRETA! PAINEL LIBERADO.");
+            } else {
+                alert("SENHA INCORRETA, MAN! TENTE DE NOVO.");
+                document.getElementById('senhaAcesso').value = "";
+            }
+        }
+
+        // Lógica para ler imagem
+        document.getElementById('inputImagem').addEventListener('change', function(e) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                imagemBase64 = reader.result;
+                document.getElementById('preview').src = imagemBase64;
+                document.getElementById('preview').style.display = "block";
+            }
+            if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
+        });
+
+        // Carregar notícias do LocalStorage
+        window.onload = function() {
+            let salvas = JSON.parse(localStorage.getItem('noticiasLorenzo') || "[]");
+            salvas.forEach(n => mostrarNaTela(n));
+        }
+
+        function salvarNoticia() {
+            let titulo = document.getElementById('novoTitulo').value;
+            let desc = document.getElementById('novaDescricao').value;
+
+            if(!titulo || !imagemBase64) return alert("Preencha o título e escolha a foto!");
+
+            let n = { titulo, desc, img: imagemBase64 };
+            let salvas = JSON.parse(localStorage.getItem('noticiasLorenzo') || "[]");
+            salvas.push(n);
+            localStorage.setItem('noticiasLorenzo', JSON.stringify(salvas));
+            
+            alert("Notícia publicada com sucesso!");
+            location.reload();
+        }
+
+        function mostrarNaTela(n) {
+            let html = `
+                <div class="card">
+                    <div class="urgente-header">🚨 NOTÍCIA AO VIVO</div>
+                    <img src="${n.img}" class="imagem-noticia">
+                    <div class="conteudo-noticia">
+                        <h2>${n.titulo}</h2>
+                        <p>${n.desc}</p>
+                    </div>
+                    <button class="botao-noticia" onclick="alert('Carregando API.......simmmm a melhor ia')">LER COMPLETA</button>
+                </div>`;
+            document.getElementById('feed-noticias').insertAdjacentHTML('afterbegin', html);
+        }
+
+        function verificarBusca() {
+            let termo = document.getElementById('inputBusca').value.toLowerCase();
+            let cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.style.display = card.innerText.toLowerCase().includes(termo) ? "block" : "none";
+            });
+        }
+    </script>
+    <script type="module" src="main.js"></script>
+
+</body>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+
+  </html>
