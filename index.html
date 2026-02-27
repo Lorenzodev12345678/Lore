@@ -14,36 +14,27 @@
             justify-content: center; align-items: center; z-index: 10000;
         }
 
-        /* Menu */
         .menu { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
         .btn-menu { background: #000; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; }
         
-        /* Abas */
         .aba { display: none; }
         .aba-ativa { display: block; }
 
-        /* Cards das Notícias */
+        /* Estilo dos Cards */
         .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border-top: 10px solid #cc0000; max-width: 500px; margin: 20px auto; text-align: left; }
         .urgente-header { background: #000; color: #fff; padding: 10px; text-align: center; font-weight: bold; }
         .imagem-noticia { width: 100%; display: block; border-bottom: 3px solid #cc0000; max-height: 400px; object-fit: cover; }
         .conteudo-noticia { padding: 20px; }
         .botao-noticia { display: block; width: 100%; background: #cc0000; color: white; padding: 15px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; }
 
-        /* Painéis */
+        /* Painéis Admin */
         .painel-box { display: none; background: #1a1a1a; color: white; padding: 20px; border-radius: 15px; border: 3px dashed gold; max-width: 500px; margin: 20px auto; }
         input, textarea { width: 90%; margin: 10px 0; padding: 10px; border-radius: 5px; border: none; display: block; margin-left: auto; margin-right: auto; }
         
-        /* Botão Google Material Oficial */
-        .gsi-material-button { background-color: white; border: 1px solid #747775; border-radius: 4px; color: #1f1f1f; cursor: pointer; font-family: 'Roboto', arial, sans-serif; font-size: 14px; font-weight: 500; height: 40px; padding: 0 12px; margin: 20px auto; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 250px; }
-        .gsi-material-button-icon { height: 20px; margin-right: 12px; min-width: 20px; width: 20px; }
-
         .btn-postar { background: gold; color: black; font-weight: bold; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; }
         .btn-master { padding: 5px 10px; margin: 5px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; }
         .btn-edit { background: #2196F3; color: white; }
         .btn-del { background: #f44336; color: white; }
-        
-        #user-info { margin-bottom: 15px; color: gold; font-weight: bold; display: none; }
-        .user-photo { width: 50px; height: 50px; border-radius: 50%; border: 2px solid gold; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -65,32 +56,13 @@
 
     <div id="aba-painel" class="aba">
         <div id="login-painel">
-            <h3>Área Restrita do Lorenzo</h3>
-            
-            <div id="user-info">
-                <img id="user-photo" class="user-photo" src="" alt="">
-                <div>Olá, <span id="user-name"></span>!</div>
-            </div>
-
-            <button class="gsi-material-button" id="btnGoogle">
-                <div class="gsi-material-button-icon">
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="display: block;">
-                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
-                        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
-                        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
-                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
-                    </svg>
-                </div>
-                <span class="gsi-material-button-contents">Sign in with Google</span>
-            </button>
-
-            <p>Ou digite a senha master:</p>
-            <input type="password" id="senhaAcesso" placeholder="Senha secreta...">
-            <button class="btn-menu" style="background:#cc0000; margin-top: 10px;" onclick="validarSenha()">ACESSAR</button>
+            <h3>Área Restrita</h3>
+            <input type="password" id="senhaAcesso" placeholder="Digite a senha master...">
+            <button class="btn-menu" style="background:#cc0000; margin-top: 10px;" onclick="validarSenha()">ENTRAR</button>
         </div>
 
         <div id="painel-real" class="painel-box">
-            <h2 style="color:gold;">👑 CRIAR NOTÍCIA</h2>
+            <h2 style="color:gold;">👑 CRIAR NOTÍCIA AO VIVO</h2>
             <input type="text" id="novoTitulo" placeholder="Título da Notícia">
             <textarea id="novaDescricao" placeholder="Descrição da Notícia"></textarea>
             <input type="file" id="inputImagem" accept="image/*">
@@ -98,25 +70,18 @@
             <button class="btn-postar" onclick="salvarNoticia()">POSTAR NO SITE</button>
         </div>
 
-        <div id="painel-master" class="painel-box" style="border-color: #00ff00;">
+        <div id="painel-master" class="painel-box" style="border-color: #00ff00; display: block;">
             <h2 style="color:#00ff00;">⚡ GERENCIAMENTO MASTER</h2>
             <div id="lista-gerenciamento"></div>
         </div>
     </div>
 
     <script>
-        // Lógica para esconder a tela de boas-vindas
-        setTimeout(() => {
-            document.getElementById('tela-welcome').style.display = 'none';
-        }, 3000);
-
-        // Troca de abas
+        setTimeout(() => { document.getElementById('tela-welcome').style.display = 'none'; }, 3000);
         function abrirAba(nome) {
             document.querySelectorAll('.aba').forEach(a => a.classList.remove('aba-ativa'));
             document.getElementById('aba-' + nome).classList.add('aba-ativa');
         }
-
-        // Pesquisa de notícias
         function verificarBusca() {
             let termo = document.getElementById('inputBusca').value.toLowerCase();
             document.querySelectorAll('.card').forEach(card => {
@@ -124,9 +89,6 @@
             });
         }
     </script>
-
-    <script type="module" src="auth.js"></script>
     <script type="module" src="main.js"></script>
-
 </body>
 </html>
