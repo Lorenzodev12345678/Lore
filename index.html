@@ -3,93 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Lore - VIP</title>
+    <title>Portal Lorenzo - VIP</title>
     <style>
         body { font-family: Arial, sans-serif; background: #e5e5e5; margin: 0; padding: 15px; text-align: center; }
         
         /* Tela de Bem-Vindo */
-        #tela-welcome {
+        #welcome-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #cc0000; color: white; display: flex; flex-direction: column;
             justify-content: center; align-items: center; z-index: 10000;
         }
 
-        /* Menu */
+        /* Menu de Navegação */
         .menu { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
         .btn-menu { background: #000; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; }
 
+        .busca-container { width: 100%; margin-bottom: 20px; }
+        .barra-busca { width: 100%; padding: 12px 20px; border-radius: 30px; border: 2px solid #cc0000; box-sizing: border-box; font-size: 16px; outline: none; }
+        
         /* Abas */
         .aba { display: none; }
         .aba-ativa { display: block; }
 
-        /* Cards */
+        /* Cards das Notícias */
         .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border-top: 10px solid #cc0000; max-width: 500px; margin: 20px auto; text-align: left; }
         .urgente-header { background: #000; color: #fff; padding: 10px; text-align: center; font-weight: bold; }
-        .imagem-noticia { width: 100%; display: block; max-height: 350px; object-fit: cover; }
+        .imagem-noticia { width: 100%; display: block; border-bottom: 3px solid #cc0000; max-height: 400px; object-fit: cover; }
         .conteudo-noticia { padding: 20px; }
-        .botao-noticia { display: block; width: 100%; background: #cc0000; color: white; padding: 15px; border: none; font-weight: bold; }
+        .botao-noticia { display: block; width: 100%; background: #cc0000; color: white; padding: 15px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; }
 
         /* Painéis */
-        .painel-box { background: #1a1a1a; color: white; padding: 20px; border-radius: 15px; border: 3px dashed gold; max-width: 500px; margin: 20px auto; display: none; }
-        input, textarea { width: 90%; margin: 10px 0; padding: 12px; border-radius: 8px; border: none; }
+        .painel-box { display: none; background: #1a1a1a; color: white; padding: 20px; border-radius: 15px; border: 3px dashed gold; max-width: 500px; margin: 20px auto; }
+        .painel-box input, .painel-box textarea { width: 90%; margin: 10px 0; padding: 10px; border-radius: 5px; border: none; display: block; margin-left: auto; margin-right: auto; }
         
-        /* Botões Master */
-        .btn-master { padding: 8px; margin: 5px; border-radius: 5px; border: none; font-weight: bold; cursor: pointer; }
-        .btn-edit { background: #2196F3; color: white; }
-        .btn-del { background: #f44336; color: white; }
+        .btn-postar { background: gold; color: black; font-weight: bold; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; width: 100%; }
+        .item-master { background: #333; padding: 10px; margin: 10px 0; border-radius: 8px; text-align: left; border-left: 5px solid #00ff00; }
+        .btn-master { padding: 5px 10px; margin-right: 5px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; }
+        .btn-renomear { background: #2196F3; color: white; }
+        .btn-excluir { background: #f44336; color: white; }
+        
+        #preview { width: 150px; margin: 10px auto; display: none; border: 2px solid gold; }
     </style>
 </head>
 <body>
 
-    <div id="tela-welcome">
+    <div id="welcome-screen">
         <h1>BEM-VINDO AO PORTAL LORE</h1>
-        <p>As notícias mais rlk da internet...</p>
+        <p>Carregando API.......simmmm a melhor ia</p>
     </div>
 
     <div class="menu">
         <button class="btn-menu" onclick="abrirAba('noticias')">📰 VER NOTÍCIAS</button>
-        <button class="btn-menu" onclick="abrirAba('painel')">🔐 PAINEL</button>
+        <button class="btn-menu" onclick="abrirAba('painel')">🔐 ACESSAR PAINEL</button>
     </div>
 
     <div id="aba-noticias" class="aba aba-ativa">
-        <input type="text" id="inputBusca" placeholder="🔍 Pesquisar..." onkeyup="verificarBusca()" style="width: 80%; border: 2px solid #cc0000; border-radius: 20px;">
+        <div class="busca-container">
+            <input type="text" id="inputBusca" class="barra-busca" placeholder="🔍 Pesquisar notícias..." onkeyup="verificarBusca()">
+        </div>
         <div id="feed-noticias"></div>
     </div>
 
     <div id="aba-painel" class="aba">
-        <div id="login-secao">
+        <div id="login-painel">
             <h3>Área Restrita</h3>
-            <input type="password" id="senhaAcesso" placeholder="Digite a senha secreta...">
+            <p>Digite a senha para acessar:</p>
+            <input type="password" id="senhaAcesso" class="barra-busca" style="width: 80%;" placeholder="Digite o código...">
             <br>
-            <button class="btn-menu" style="background:#cc0000" onclick="validarSenha()">DESBLOQUEAR</button>
+            <button class="btn-menu" style="background:#cc0000; margin-top:10px;" onclick="validarSenha()">DESBLOQUEAR</button>
         </div>
 
-        <div id="painel-lorenzo" class="painel-box">
-            <h2 style="color:gold;">👑 PAINEL POSTAR</h2>
+        <div id="painel-real" class="painel-box">
+            <h2 style="color:gold;">👑 PAINEL DE POSTAGEM</h2>
             <input type="text" id="novoTitulo" placeholder="Título da Notícia">
-            <textarea id="novaDescricao" placeholder="Descrição"></textarea>
+            <textarea id="novaDescricao" placeholder="Descrição da Notícia"></textarea>
             <input type="file" id="inputImagem" accept="image/*">
-            <img id="preview" src="" style="width: 100px; display:none; margin: 10px auto; border: 2px solid gold;">
-            <button onclick="salvarNoticia()" style="background:gold; padding: 15px; width: 100%; font-weight: bold; border-radius: 10px;">POSTAR NO SITE</button>
+            <img id="preview" src="">
+            <button class="btn-postar" onclick="salvarNoticia()">POSTAR NO SITE</button>
         </div>
 
         <div id="painel-master" class="painel-box" style="border-color: #00ff00;">
-            <h2 style="color:#00ff00;">⚡ MASTER CONTROL</h2>
-            <p>Gerencie as notícias ao vivo:</p>
+            <h2 style="color:#00ff00;">⚡ GERENCIAMENTO MASTER</h2>
             <div id="lista-master"></div>
         </div>
     </div>
 
     <script>
-        // Funções de interface básica
+        // Sumir tela de bem-vindo após 3 segundos
+        setTimeout(() => {
+            document.getElementById('welcome-screen').style.display = 'none';
+        }, 3000);
+
         function abrirAba(nome) {
             document.querySelectorAll('.aba').forEach(a => a.classList.remove('aba-ativa'));
             document.getElementById('aba-' + nome).classList.add('aba-ativa');
         }
-
-        setTimeout(() => {
-            document.getElementById('tela-welcome').style.display = 'none';
-        }, 3000);
 
         function verificarBusca() {
             let termo = document.getElementById('inputBusca').value.toLowerCase();
@@ -98,7 +106,6 @@
             });
         }
     </script>
-
     <script type="module" src="main.js"></script>
 </body>
 </html>
